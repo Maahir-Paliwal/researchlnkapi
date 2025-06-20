@@ -1,0 +1,13 @@
+spring:
+    application:
+        name: researchlnkAPI
+    datasource:
+        url: jdbc:mysql://localhost:3306/researchlnk?createDatabaseIfNotExist=true
+        username: root
+        password: MyPassword!
+    jpa:
+        show-sql: true
+
+
+
+
