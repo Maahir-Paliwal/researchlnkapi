@@ -16,13 +16,13 @@ public class Profile {
     @Column(name ="id")
     private Long id;
 
-    @Column(name = "position")
+    @Column(name = "position", nullable = false)
     private String position;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name ="profile_picture")
+    @Column(name ="profile_picture", nullable = false)
     private String profilePicture;
 
     //Eager b/c we will always show their name, sometimes need orcidID, etc.

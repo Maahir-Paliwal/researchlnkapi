@@ -26,7 +26,7 @@ CREATE TABLE posts (
     id          BIGINT AUTO_INCREMENT               NOT NULL,
     profile_id  BIGINT                              NOT NULL,
     postType    VARCHAR(255)                        NOT NULL,
-    view        ENUM('PUBLIC', 'CONNECTIONS ONLY')  NOT NULL,
+    view        ENUM('PUBLIC', 'CONNECTIONS_ONLY')  NOT NULL,
     description LONGTEXT                            NOT NULL,
     date        VARCHAR(255)                        NOT NULL,
     created_at  TIMESTAMP                           DEFAULT CURRENT_TIMESTAMP,       #useful for sorting for recency
