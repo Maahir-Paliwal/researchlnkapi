@@ -29,5 +29,4 @@ public class SwipeCard {
     @JoinColumn(name = "id")
     @MapsId
     private Profile profile;
-
 }
