@@ -33,7 +33,7 @@ public class Post {
     @Column(name = "date", nullable = false)
     private String date;
 
-    @Column(name ="created_at", nullable = false)
+    @Column(name ="created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.EAGER)

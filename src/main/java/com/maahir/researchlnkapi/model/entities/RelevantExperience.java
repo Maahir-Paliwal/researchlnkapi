@@ -12,7 +12,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name ="relevantExperiences")
-public class RelevantExperiences {
+public class RelevantExperience {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

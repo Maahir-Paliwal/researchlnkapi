@@ -12,5 +12,5 @@ CREATE TABLE profileExperiences(
         ON DELETE CASCADE
 );
 
-#Indexing to query and show all of the user's experiences on their table
+#Indexing to query and show all the user's experiences on their table
 CREATE INDEX `idx_profileExperiences_profile_id` ON profileExperiences(profile_id)
