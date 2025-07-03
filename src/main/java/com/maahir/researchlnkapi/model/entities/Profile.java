@@ -16,6 +16,9 @@ public class Profile {
     @Column(name ="id")
     private Long id;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "position", nullable = false)
     private String position;
 
