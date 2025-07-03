@@ -1,6 +1,5 @@
 CREATE TABLE users (
     id          BIGINT AUTO_INCREMENT   NOT NULL,
-    name        VARCHAR(255)            NOT NULL,
     email       VARCHAR(255)            NOT NULL,
     password    VARCHAR(255)            NOT NULL,
     orcidId     VARCHAR(255),                                                                  #optional
@@ -11,6 +10,7 @@ CREATE TABLE users (
 
 CREATE TABLE profiles (
     id              BIGINT                  NOT NULL,
+    name            VARCHAR(255)            NOT NULL,
     position        VARCHAR(255)            NOT NULL,
     description     LONGTEXT                NOT NULL,
     profile_picture VARCHAR(512)            NOT NULL,              #profile picture functionality
