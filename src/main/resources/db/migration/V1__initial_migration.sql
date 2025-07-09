@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id          BIGINT AUTO_INCREMENT   NOT NULL,
     email       VARCHAR(255)            NOT NULL,
-    password    VARCHAR(255)            NOT NULL,
+    password    VARCHAR(255)                    ,                                              #NULL b/c Oauth
     orcidId     VARCHAR(255),                                                                  #optional
     created_at  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, #info to display to the user
