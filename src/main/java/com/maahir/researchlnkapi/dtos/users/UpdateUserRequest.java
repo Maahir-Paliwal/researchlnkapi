@@ -10,7 +10,5 @@ import java.util.Optional;
 
 @Data
 public class UpdateUserRequest {
-    private Optional<String> email;
-    private Optional<String> password;
-    private Optional<String> orcidId;
+    private String email;
 }

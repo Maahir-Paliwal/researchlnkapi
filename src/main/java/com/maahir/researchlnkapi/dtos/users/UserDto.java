@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class UserDto {
     private Long id;
     private String email;
+    private String orcidID;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
