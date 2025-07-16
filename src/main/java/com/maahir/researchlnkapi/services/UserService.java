@@ -39,17 +39,13 @@ public class UserService {
         return userMapper.toDto(savedUser);
     }
 
-    public UserDto getUserByEmail(String email){
-        User user = userRepository.findByEmail(email).
-                orElseThrow(() -> new RuntimeException("User not found"));
-
+    public UserDto getUser(Object principal){
+        User user = extractUserFromPrincipal(principal);
         return userMapper.toDto(user);
     }
 
-    public UserDto updateUser(String email, UpdateUserRequest request){
-        User user = userRepository.findByEmail(email).
-                orElseThrow(() -> new RuntimeException("User not found with email: " + email));
-
+    public UserDto updateUser(Object principal, UpdateUserRequest request){
+        User user = extractUserFromPrincipal(principal);
         userMapper.update(request, user);
         User updatedUser = userRepository.save(user);
         return userMapper.toDto(updatedUser);
@@ -77,15 +73,10 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public void deleteUserByEmail(String email){
-        if (!userRepository.existsByEmail(email)){
-            throw new RuntimeException("User cannot be deleted because email:" + email + "was not found");
-        }
-
-        Long id = extractUserIdFromEmail(email);
-        userRepository.deleteById(id);
+    public void deleteUser(Object principal){
+        User user = extractUserFromPrincipal(principal);
+        userRepository.delete(user);
     }
-
 
     private User extractUserFromPrincipal(Object principal){
         String email;
@@ -100,11 +91,4 @@ public class UserService {
                 orElseThrow(() -> new RuntimeException("User not found by email"));
     }
 
-
-    private Long extractUserIdFromEmail(String email) {
-        User user = userRepository.findByEmail(email).
-                orElseThrow(()-> new RuntimeException("User not found with email: " + email));
-
-        return user.getId();
-    }
 }
