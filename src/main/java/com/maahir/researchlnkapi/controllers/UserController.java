@@ -3,11 +3,10 @@ package com.maahir.researchlnkapi.controllers;
 import com.maahir.researchlnkapi.dtos.users.RegisterUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UpdateUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UserDto;
-import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.services.UserService;
-import org.mapstruct.control.MappingControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,30 +16,34 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    //User sign up with username + password
+    //User sign up with username and password
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserRequest request){
+    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserRequest request) {
         UserDto user = userService.registerUser(request);
         return ResponseEntity.ok(user);
     }
 
-    //get a user by their database ID
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
-        UserDto user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request){
-        UserDto updatedUser = userService.updateUser(id, request);
+    @PutMapping("/me")
+    public ResponseEntity<UserDto> updateUser(@AuthenticationPrincipal Object principal,
+                                              @RequestBody UpdateUserRequest request) {
+        UserDto updatedUser = userService.updateUser(principal, request);
         return ResponseEntity.ok(updatedUser);
     }
 
+    @PutMapping("/me")
+    public ResponseEntity<UserDto> getUser(@AuthenticationPrincipal Object principal) {
+        UserDto userDto = userService.getUser(principal);
+        return ResponseEntity.ok(userDto);
+    }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal Object principal){
+        userService.deleteUser(principal);
+        return ResponseEntity.noContent().build();
+    }
 
 }
