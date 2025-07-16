@@ -74,5 +74,10 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-
+    public void deleteUserById(Long id){
+        if (!userRepository.existsById(id)){
+            throw new RuntimeException("User cannot be deleted because Id was not found");
+        }
+        userRepository.deleteById(id);
+    }
 }
