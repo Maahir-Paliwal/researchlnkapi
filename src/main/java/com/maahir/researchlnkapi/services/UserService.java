@@ -8,7 +8,9 @@ import com.maahir.researchlnkapi.mappers.UserMapper;
 import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -37,15 +39,16 @@ public class UserService {
         return userMapper.toDto(savedUser);
     }
 
-    public UserDto getUserById(Long id){
-        User user = userRepository.findById(id).
+    public UserDto getUserByEmail(String email){
+        User user = userRepository.findByEmail(email).
                 orElseThrow(() -> new RuntimeException("User not found"));
+
         return userMapper.toDto(user);
     }
 
-    public UserDto updateUser(Long id, UpdateUserRequest request){
-        User user = userRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("User not found"));
+    public UserDto updateUser(String email, UpdateUserRequest request){
+        User user = userRepository.findByEmail(email).
+                orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
         userMapper.update(request, user);
         User updatedUser = userRepository.save(user);
@@ -59,7 +62,7 @@ public class UserService {
     }
 
     public UserDto processOrcidLogin(String orcidId, String email){
-        Optional<User> userOpt = userRepository.findByOrcidId(orcidId);
+        Optional<User> userOpt = userRepository.findByEmail(email);
 
         User user;
         if (userOpt.isPresent()){
@@ -74,10 +77,34 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public void deleteUserById(Long id){
-        if (!userRepository.existsById(id)){
-            throw new RuntimeException("User cannot be deleted because Id was not found");
+    public void deleteUserByEmail(String email){
+        if (!userRepository.existsByEmail(email)){
+            throw new RuntimeException("User cannot be deleted because email:" + email + "was not found");
         }
+
+        Long id = extractUserIdFromEmail(email);
         userRepository.deleteById(id);
+    }
+
+
+    private User extractUserFromPrincipal(Object principal){
+        String email;
+        if (principal instanceof OAuth2User oauthUser){
+            email = oauthUser.getAttribute("email");
+        } else if (principal instanceof UserDetails userDetails) {
+            email = userDetails.getUsername();
+        } else {
+            throw new RuntimeException("Unsupported principal type: " + principal.getClass().getSimpleName());
+        }
+        return userRepository.findByEmail(email).
+                orElseThrow(() -> new RuntimeException("User not found by email"));
+    }
+
+
+    private Long extractUserIdFromEmail(String email) {
+        User user = userRepository.findByEmail(email).
+                orElseThrow(()-> new RuntimeException("User not found with email: " + email));
+
+        return user.getId();
     }
 }
