@@ -95,7 +95,7 @@ public class UserService {
         if (principal instanceof OAuth2User oauthUser){
             email = oauthUser.getAttribute("email");
         } else if (principal instanceof UserDetails userDetails) {
-            email = userDetails.getUsername();
+            email = userDetails.getUsername();                          //is getUsername() the right method to call?
         } else {
             throw new RuntimeException("Unsupported principal type: " + principal.getClass().getSimpleName());
         }
