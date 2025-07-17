@@ -5,6 +5,7 @@ import com.maahir.researchlnkapi.dtos.users.RegisterUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UpdateUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UserDto;
 import com.maahir.researchlnkapi.mappers.UserMapper;
+import com.maahir.researchlnkapi.model.entities.Profile;
 import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,17 @@ public class UserService {
 
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        //Create an empty profile and link it to the user
+        Profile profile = Profile.builder()
+                .name("")
+                .position("")
+                .description("")
+                .profilePicture("")
+                .build();
+
+        user.setProfile(profile);   //handling bidirectionality
+
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }
