@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @PutMapping("/me")
+    @GetMapping("/me")
     public ResponseEntity<UserDto> getUser(@AuthenticationPrincipal Object principal) {
         UserDto userDto = userService.getUser(principal);
         return ResponseEntity.ok(userDto);
