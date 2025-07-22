@@ -1,4 +1,4 @@
-package com.maahir.researchlnkapi.config;
+package com.maahir.researchlnkapi.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
