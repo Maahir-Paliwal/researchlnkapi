@@ -29,7 +29,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDto registerUser(RegisterUserRequest request){
+    public UserDto registerUserByEmailAndPassword(RegisterUserRequest request){
         if (userRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("Email is already registered");
         }
@@ -45,7 +45,7 @@ public class UserService {
                 .profilePicture("")
                 .build();
 
-        user.setProfile(profile);   //handling bidirectionality
+        user.setProfile(profile);                                   //handling bidirectionality
 
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
@@ -69,7 +69,7 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public UserDto processOrcidLogin(String orcidId, String email){
+    public UserDto processOrcidSignUp(String orcidId, String email){
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         User user;
@@ -80,8 +80,19 @@ public class UserService {
                     .orcidId(orcidId)
                     .email(email)
                     .build();
+
+            Profile profile = Profile.builder()
+                    .name("")
+                    .position("")
+                    .description("")
+                    .profilePicture("")
+                    .build();
+
+            user.setProfile(profile);                                   //handling bidirectionality
             user = userRepository.save(user);
         }
+
+
         return userMapper.toDto(user);
     }
 

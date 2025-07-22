@@ -19,18 +19,17 @@ spring:
             client:
                 registration:
                     orcid:
-                        client-id: APP-PAC2MBBBAYC5U6ZP
-                        client-secret: 107b5c94-65a5-4186-a5de-1ad6df708d30
-                        scope: openid
+                        client-id: APP-FPBF4JH03KFK1UGQ
+                        client-secret: a5cf2a80-c16c-41db-af93-3a8b90128439
+                        scope: /authenticate
                         authorization-grant-type: authorization_code
                         redirect-uri: "https://exact-horse-nearby.ngrok-free.app/login/oauth2/code/orcid"
                 provider:
                     orcid:
-                        authorization-uri: https://sandbox.orcid.org/oauth/authorize
-                        token-uri: https://sandbox.orcid.org/oauth/token
-                        user-info-uri: https://pub.sandbox.orcid.org/oauth/userinfo
+                        authorization-uri: https://orcid.org/oauth/authorize
+                        token-uri: https://orcid.org/oauth/token
+                        user-info-uri: https://orcid.org/oauth/userinfo
                         user-name-attribute: sub
-                        jwk-set-uri: https://sandbox.orcid.org/oauth/jwks
 
 logging:
     level:
