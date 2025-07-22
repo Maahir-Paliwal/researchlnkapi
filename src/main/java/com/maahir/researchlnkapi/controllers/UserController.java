@@ -1,5 +1,6 @@
 package com.maahir.researchlnkapi.controllers;
 
+import com.maahir.researchlnkapi.dtos.users.RegisterUserByOrcid;
 import com.maahir.researchlnkapi.dtos.users.RegisterUserByPassword;
 import com.maahir.researchlnkapi.dtos.users.UpdateUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UserDto;
@@ -21,9 +22,15 @@ public class UserController {
     }
 
     //User sign up with email and password
-    @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserByPassword request) {
+    @PostMapping("/signup/password")
+    public ResponseEntity<UserDto> registerWithPassword(@RequestBody RegisterUserByPassword request) {
         UserDto user = userService.registerUserByEmailAndPassword(request);
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/signup/orcid")
+    public ResponseEntity<UserDto> registerWithOrcid(@RequestBody RegisterUserByOrcid request) {
+        UserDto user = userService.registerUserByOrcid(request);
         return ResponseEntity.ok(user);
     }
 
