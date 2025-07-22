@@ -1,7 +1,8 @@
 package com.maahir.researchlnkapi.services;
 
 
-import com.maahir.researchlnkapi.dtos.users.RegisterUserRequest;
+import com.maahir.researchlnkapi.dtos.users.RegisterUserByOrcid;
+import com.maahir.researchlnkapi.dtos.users.RegisterUserByPassword;
 import com.maahir.researchlnkapi.dtos.users.UpdateUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UserDto;
 import com.maahir.researchlnkapi.mappers.UserMapper;
@@ -29,7 +30,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDto registerUserByEmailAndPassword(RegisterUserRequest request){
+
+    public UserDto registerUserByEmailAndPassword(RegisterUserByPassword request){
         if (userRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("Email is already registered");
         }
@@ -51,10 +53,32 @@ public class UserService {
         return userMapper.toDto(savedUser);
     }
 
+
+    public UserDto registerUserByOrcid(RegisterUserByOrcid request){
+        if (userRepository.existsByEmail(request.getEmail())){
+            throw new RuntimeException("Email is already registered");
+        }
+        User user = userMapper.toEntity(request);
+
+        Profile profile = Profile.builder()
+                .name("")
+                .position("")
+                .description("")
+                .profilePicture("")
+                .build();
+
+        user.setProfile(profile);                                   //handling bidirectionality
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toDto(savedUser);
+    }
+
+
     public UserDto getUser(Object principal){
         User user = extractUserFromPrincipal(principal);
         return userMapper.toDto(user);
     }
+
 
     public UserDto updateUser(Object principal, UpdateUserRequest request){
         User user = extractUserFromPrincipal(principal);
@@ -63,55 +87,26 @@ public class UserService {
         return userMapper.toDto(updatedUser);
     }
 
-    public UserDto findByOrcidId(String orcidId){
-        User user = userRepository.findByOrcidId(orcidId).
-                orElseThrow(() -> new RuntimeException("User not found by OrcidId"));
-        return userMapper.toDto(user);
-    }
-
-    public UserDto processOrcidSignUp(String orcidId, String email){
-        Optional<User> userOpt = userRepository.findByEmail(email);
-
-        User user;
-        if (userOpt.isPresent()){
-            user = userOpt.get();
-        } else {
-            user = User.builder()
-                    .orcidId(orcidId)
-                    .email(email)
-                    .build();
-
-            Profile profile = Profile.builder()
-                    .name("")
-                    .position("")
-                    .description("")
-                    .profilePicture("")
-                    .build();
-
-            user.setProfile(profile);                                   //handling bidirectionality
-            user = userRepository.save(user);
-        }
-
-
-        return userMapper.toDto(user);
-    }
 
     public void deleteUser(Object principal){
         User user = extractUserFromPrincipal(principal);
         userRepository.delete(user);
     }
 
+
     private User extractUserFromPrincipal(Object principal){
-        String email;
         if (principal instanceof OAuth2User oauthUser){
-            email = oauthUser.getAttribute("email");
+            String orcidId = oauthUser.getAttribute("sub");
+            return userRepository.findByOrcidId(orcidId).
+                    orElseThrow(() -> new RuntimeException("User not found by orcidId"));
+
         } else if (principal instanceof UserDetails userDetails) {
-            email = userDetails.getUsername();                          //is getUsername() the right method to call?
+            String email = userDetails.getUsername();                   //is getUsername() the right method to call?
+            return userRepository.findByEmail(email).
+                    orElseThrow(() -> new RuntimeException("User not found by email"));
+
         } else {
             throw new RuntimeException("Unsupported principal type: " + principal.getClass().getSimpleName());
         }
-        return userRepository.findByEmail(email).
-                orElseThrow(() -> new RuntimeException("User not found by email"));
     }
-
 }

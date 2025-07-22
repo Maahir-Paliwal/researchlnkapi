@@ -4,7 +4,7 @@ import lombok.Data;
 
 //manual sign in: frontend -> backend
 @Data
-public class RegisterUserRequest {
+public class RegisterUserByPassword {
     private String email;
     private String password;
 }

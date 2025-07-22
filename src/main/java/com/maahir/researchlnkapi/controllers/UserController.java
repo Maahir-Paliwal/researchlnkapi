@@ -1,6 +1,6 @@
 package com.maahir.researchlnkapi.controllers;
 
-import com.maahir.researchlnkapi.dtos.users.RegisterUserRequest;
+import com.maahir.researchlnkapi.dtos.users.RegisterUserByPassword;
 import com.maahir.researchlnkapi.dtos.users.UpdateUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UserDto;
 import com.maahir.researchlnkapi.services.UserService;
@@ -20,10 +20,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    //User sign up with username and password
+    //User sign up with email and password
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserRequest request) {
-        UserDto user = userService.registerUser(request);
+    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserByPassword request) {
+        UserDto user = userService.registerUserByEmailAndPassword(request);
         return ResponseEntity.ok(user);
     }
 
