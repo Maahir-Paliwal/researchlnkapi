@@ -16,14 +16,21 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http,
+                                                   CustomOAuth2UserService customOAuth2UserService) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "api/users/signup/password", "/api/users/signup/orcid")
-                        .permitAll().anyRequest().authenticated())
+                        .requestMatchers("/api/auth/login",
+                                "/api/users/signup/password",
+                                "/api/users/signup/orcid",
+                                "oauth2/authorization/orcid",
+                                "login/oauth2/code/orcid")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .defaultSuccessUrl("/", true)
                 );
 
