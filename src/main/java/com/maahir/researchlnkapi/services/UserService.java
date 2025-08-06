@@ -9,12 +9,14 @@ import com.maahir.researchlnkapi.mappers.UserMapper;
 import com.maahir.researchlnkapi.model.entities.Profile;
 import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
+import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -38,6 +40,8 @@ public class UserService {
 
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
         //Create an empty profile and link it to the user
         Profile profile = Profile.builder()
@@ -100,8 +104,8 @@ public class UserService {
             return userRepository.findByOrcidId(orcidId).
                     orElseThrow(() -> new RuntimeException("User not found by orcidId"));
 
-        } else if (principal instanceof UserDetails userDetails) {
-            String email = userDetails.getUsername();                   //is getUsername() the right method to call?
+        } else if (principal instanceof CustomUserDetails customUserDetails) {
+            String email = customUserDetails.getUsername();                   //is getUsername() the right method to call?
             return userRepository.findByEmail(email).
                     orElseThrow(() -> new RuntimeException("User not found by email"));
 

@@ -2,7 +2,7 @@ CREATE TABLE users (
     id          BIGINT AUTO_INCREMENT   NOT NULL,
     email       VARCHAR(255)            NOT NULL,
     password    VARCHAR(255)                    ,                                              #NULL b/c Oauth
-    orcidId     VARCHAR(255),                                                                  #optional
+    orcid_id    VARCHAR(255),                                                                  #optional
     created_at  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, #info to display to the user
     CONSTRAINT `pk_users` PRIMARY KEY (id)
@@ -25,7 +25,7 @@ CREATE TABLE profiles (
 CREATE TABLE posts (
     id          BIGINT AUTO_INCREMENT               NOT NULL,
     profile_id  BIGINT                              NOT NULL,
-    postType    VARCHAR(255)                        NOT NULL,
+    post_type    VARCHAR(255)                        NOT NULL,
     view        ENUM('PUBLIC', 'CONNECTIONS_ONLY')  NOT NULL,
     description LONGTEXT                            NOT NULL,
     date        VARCHAR(255)                        NOT NULL,

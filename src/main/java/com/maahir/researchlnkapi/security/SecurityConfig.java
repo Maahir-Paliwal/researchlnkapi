@@ -25,8 +25,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login",
                                 "/api/users/signup/password",
                                 "/api/users/signup/orcid",
-                                "oauth2/authorization/orcid",
-                                "login/oauth2/code/orcid")
+                                "/oauth2/authorization/orcid",
+                                "/login/oauth2/code/orcid")
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2

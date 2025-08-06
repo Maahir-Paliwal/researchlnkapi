@@ -20,7 +20,7 @@ public class Post {
     @Column(name = "id")
     private Long id;
 
-    @Column(name ="postType", nullable = false)
+    @Column(name ="post_type", nullable = false)
     private String postType;
 
     @Enumerated(EnumType.STRING)
