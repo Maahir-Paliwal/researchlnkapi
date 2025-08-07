@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     User newUser = User.builder()
                             .email(email)
                             .orcidId(orcidId)
+                            .createdAt(LocalDateTime.now())
+                            .updatedAt(LocalDateTime.now())
                             .build();
                     newUser.setProfile(profile);
                     return userRepository.save(newUser);
