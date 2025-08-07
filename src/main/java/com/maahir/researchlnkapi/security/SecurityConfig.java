@@ -26,7 +26,8 @@ public class SecurityConfig {
                                 "/api/users/signup/password",
                                 "/api/users/signup/orcid",
                                 "/oauth2/authorization/orcid",
-                                "/login/oauth2/code/orcid")
+                                "/login/oauth2/code/orcid",
+                                "/error")
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2

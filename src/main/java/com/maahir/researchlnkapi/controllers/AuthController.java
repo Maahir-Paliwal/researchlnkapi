@@ -5,10 +5,12 @@ import com.maahir.researchlnkapi.dtos.users.UserDto;
 import com.maahir.researchlnkapi.mappers.UserMapper;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,15 +32,23 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> login(@RequestBody RegisterUserByPassword request){
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(auth);
+            SecurityContextHolder.getContext().setAuthentication(auth);
 
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        UserDto userDto = userMapper.toDto(userDetails.getUserEntity());
-        return ResponseEntity.ok(userDto);
+            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+            UserDto userDto = userMapper.toDto(userDetails.getUserEntity());
+            return ResponseEntity.ok(userDto);
 
+        } catch (AuthenticationException exception) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(null);
+        }
     }
 }
+
+//Returns 401 error if not authorized
