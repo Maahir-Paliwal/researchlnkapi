@@ -87,6 +87,7 @@ public class UserService {
     public UserDto updateUser(Object principal, UpdateUserRequest request){
         User user = extractUserFromPrincipal(principal);
         userMapper.update(request, user);
+        user.setUpdatedAt(LocalDateTime.now());
         User updatedUser = userRepository.save(user);
         return userMapper.toDto(updatedUser);
     }
@@ -99,15 +100,17 @@ public class UserService {
 
 
     private User extractUserFromPrincipal(Object principal){
+        Long userId;
         if (principal instanceof OAuth2User oauthUser){
-            String orcidId = oauthUser.getAttribute("orcidId");
-            return userRepository.findByOrcidId(orcidId).
-                    orElseThrow(() -> new RuntimeException("User not found by orcidId"));
+
+            userId = Long.valueOf(oauthUser.getAttribute("id"));
+            return userRepository.findById(userId).
+                    orElseThrow(() -> new RuntimeException("User not found by Id"));
 
         } else if (principal instanceof CustomUserDetails customUserDetails) {
-            String email = customUserDetails.getUsername();                   //is getUsername() the right method to call?
-            return userRepository.findByEmail(email).
-                    orElseThrow(() -> new RuntimeException("User not found by email"));
+            userId = customUserDetails.getUserEntity().getId();
+            return userRepository.findById(userId).
+                    orElseThrow(() -> new RuntimeException("User not found by Id"));
 
         } else {
             throw new RuntimeException("Unsupported principal type: " + principal.getClass().getSimpleName());

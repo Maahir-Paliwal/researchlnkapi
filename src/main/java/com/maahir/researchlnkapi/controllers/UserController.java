@@ -28,12 +28,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    //Not going to need this
-    @PostMapping("/signup/orcid")
-    public ResponseEntity<UserDto> registerWithOrcid(@RequestBody RegisterUserByOrcid request) {
-        UserDto user = userService.registerUserByOrcid(request);
-        return ResponseEntity.ok(user);
-    }
+
 
     @PutMapping("/me")
     public ResponseEntity<UserDto> updateUser(@AuthenticationPrincipal Object principal,
