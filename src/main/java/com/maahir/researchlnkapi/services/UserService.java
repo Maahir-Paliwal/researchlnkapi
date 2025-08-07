@@ -100,7 +100,7 @@ public class UserService {
 
     private User extractUserFromPrincipal(Object principal){
         if (principal instanceof OAuth2User oauthUser){
-            String orcidId = oauthUser.getAttribute("sub");
+            String orcidId = oauthUser.getAttribute("orcidId");
             return userRepository.findByOrcidId(orcidId).
                     orElseThrow(() -> new RuntimeException("User not found by orcidId"));
 
