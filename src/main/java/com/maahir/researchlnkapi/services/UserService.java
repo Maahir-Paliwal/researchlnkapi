@@ -102,8 +102,12 @@ public class UserService {
     private User extractUserFromPrincipal(Object principal){
         Long userId;
         if (principal instanceof OAuth2User oauthUser){
-
-            userId = Long.valueOf(oauthUser.getAttribute("id"));
+            Object rawId = oauthUser.getAttribute("id");
+            if (rawId instanceof Number n) {
+                userId = n.longValue();
+            } else {
+                userId = Long.valueOf(rawId.toString());
+            }
             return userRepository.findById(userId).
                     orElseThrow(() -> new RuntimeException("User not found by Id"));
 
