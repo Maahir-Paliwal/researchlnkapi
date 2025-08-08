@@ -12,6 +12,4 @@ public class ProfileDto {
     private String position;
     private String description;
     private String profilePicture;
-    private Long createdAt;
-    private Long updatedAt;
 }
