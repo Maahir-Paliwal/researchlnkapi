@@ -6,6 +6,7 @@ import com.maahir.researchlnkapi.dtos.profiles.UpdateProfileRequest;
 import com.maahir.researchlnkapi.mappers.ProfileMapper;
 import com.maahir.researchlnkapi.model.entities.Profile;
 import com.maahir.researchlnkapi.model.entities.User;
+import com.maahir.researchlnkapi.model.repositories.ProfileRepository;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ import org.springframework.stereotype.Service;
 public class ProfileService {
     private final UserRepository userRepository;
     private final ProfileMapper profileMapper;
+    private final ProfileRepository profileRepository;
 
     @Autowired
-    public ProfileService(UserRepository userRepository, ProfileMapper profileMapper){
+    public ProfileService(UserRepository userRepository, ProfileMapper profileMapper, ProfileRepository profileRepository){
         this.userRepository = userRepository;
         this.profileMapper = profileMapper;
+        this.profileRepository = profileRepository;
     }
 
     public ProfileDto getProfile(Object principal) {
@@ -35,6 +38,7 @@ public class ProfileService {
         User user = extractUserFromPrincipal(principal);
         Profile profile = user.getProfile();
         profileMapper.update(request, profile);
+        profile = profileRepository.save(profile);
         return profileMapper.toDto(profile);
     }
 

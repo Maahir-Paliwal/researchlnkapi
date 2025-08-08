@@ -57,27 +57,6 @@ public class UserService {
         return userMapper.toDto(savedUser);
     }
 
-
-    public UserDto registerUserByOrcid(RegisterUserByOrcid request){
-        if (userRepository.existsByEmail(request.getEmail())){
-            throw new RuntimeException("Email is already registered");
-        }
-        User user = userMapper.toEntity(request);
-
-        Profile profile = Profile.builder()
-                .name("")
-                .position("")
-                .description("")
-                .profilePicture("")
-                .build();
-
-        user.setProfile(profile);                                   //handling bidirectionality
-        User savedUser = userRepository.save(user);
-
-        return userMapper.toDto(savedUser);
-    }
-
-
     public UserDto getUser(Object principal){
         User user = extractUserFromPrincipal(principal);
         return userMapper.toDto(user);
