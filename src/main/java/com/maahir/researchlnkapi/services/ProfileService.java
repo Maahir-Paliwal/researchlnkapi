@@ -7,6 +7,7 @@ import com.maahir.researchlnkapi.mappers.ProfileMapper;
 import com.maahir.researchlnkapi.model.entities.Profile;
 import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
+import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -38,15 +39,24 @@ public class ProfileService {
     }
 
     private User extractUserFromPrincipal(Object principal){
-        String email;
+        Long userId;
         if (principal instanceof OAuth2User oauthUser){
-            email = oauthUser.getAttribute("email");
-        } else if (principal instanceof UserDetails userDetails) {
-            email = userDetails.getUsername();
+            Object rawId = oauthUser.getAttribute("id");
+            if (rawId instanceof Number n) {
+                userId = n.longValue();
+            } else {
+                userId = Long.valueOf(rawId.toString());
+            }
+            return userRepository.findById(userId).
+                    orElseThrow(() -> new RuntimeException("User not found by Id"));
+
+        } else if (principal instanceof CustomUserDetails customUserDetails) {
+            userId = customUserDetails.getUserEntity().getId();
+            return userRepository.findById(userId).
+                    orElseThrow(() -> new RuntimeException("User not found by Id"));
+
         } else {
             throw new RuntimeException("Unsupported principal type: " + principal.getClass().getSimpleName());
         }
-        return userRepository.findByEmail(email).
-                orElseThrow(() -> new RuntimeException("User not found by email"));
     }
 }
