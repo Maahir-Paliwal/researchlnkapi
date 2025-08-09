@@ -1,6 +1,5 @@
 package com.maahir.researchlnkapi.controllers;
 
-import com.maahir.researchlnkapi.dtos.users.RegisterUserByOrcid;
 import com.maahir.researchlnkapi.dtos.users.RegisterUserByPassword;
 import com.maahir.researchlnkapi.dtos.users.UpdateUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UserDto;
