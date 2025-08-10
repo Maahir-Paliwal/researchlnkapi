@@ -24,14 +24,12 @@ public class ConnectionService {
     private final ConnectionRepository connectionRepository;
     private final ConnectionMapper connectionMapper;
     private final UserRepository userRepository;
-    private final HikariCheckpointRestoreLifecycle hikariCheckpointRestoreLifecycle;
 
     @Autowired
-    public ConnectionService(ConnectionRepository connectionRepository, ConnectionMapper connectionMapper, UserRepository userRepository, HikariCheckpointRestoreLifecycle hikariCheckpointRestoreLifecycle){
+    public ConnectionService(ConnectionRepository connectionRepository, ConnectionMapper connectionMapper, UserRepository userRepository){
         this.connectionRepository = connectionRepository;
         this.connectionMapper = connectionMapper;
         this.userRepository = userRepository;
-        this.hikariCheckpointRestoreLifecycle = hikariCheckpointRestoreLifecycle;
     }
 
     public ConnectionStatusDto request(Object principal, ConnectionRequestDto requestDto){
