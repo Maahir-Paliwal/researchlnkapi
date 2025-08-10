@@ -69,6 +69,7 @@ CREATE TABLE relevantExperiences (
 CREATE TABLE connections (
     connector_id      BIGINT                       NOT NULL,
     connectee_id      BIGINT                       NOT NULL,
+    requester_id      BIGINT                       NOT NULL,
     status            ENUM('PENDING', 'ACCEPTED')  DEFAULT 'PENDING',
     created_at        TIMESTAMP                    DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMP          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, #when we go from pending
@@ -83,6 +84,10 @@ CREATE TABLE connections (
     CONSTRAINT `fk_connections_connectee`                                   #connectee profile
         FOREIGN KEY (connectee_id) REFERENCES profiles(id)                  #connector and connectee are arbitrary
         ON DELETE CASCADE,                                                  #in terms of connecting
+
+    CONSTRAINT `fk_connections_requester`                                   #requester id
+        FOREIGN KEY (requester_id) REFERENCES profiles(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT `chk_connections_ordering`                                   #Enforces symmetry
         CHECK (connector_id < connectee_id)

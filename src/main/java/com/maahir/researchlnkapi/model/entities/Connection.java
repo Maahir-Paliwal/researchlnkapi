@@ -27,6 +27,9 @@ public class Connection {
     @Column(name = "connectee_id")
     private Long connecteeId;
 
+    @Column(name ="requester_id", nullable = false)
+    private Long requesterId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private ConnectionStatus connectionStatus;
@@ -44,6 +47,10 @@ public class Connection {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "connectee_id", insertable = false, updatable = false)
     private Profile connectee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_id", insertable = false, updatable = false)
+    private Profile requester;
 
     //key pair validation will be handled in the service layer.
 }

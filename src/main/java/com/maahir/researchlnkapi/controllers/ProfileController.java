@@ -4,14 +4,13 @@ package com.maahir.researchlnkapi.controllers;
 import com.maahir.researchlnkapi.dtos.profiles.ProfileDto;
 import com.maahir.researchlnkapi.dtos.profiles.UpdateProfileRequest;
 import com.maahir.researchlnkapi.services.ProfileService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/profile")
 public class ProfileController {
 
     private final ProfileService profileService;
