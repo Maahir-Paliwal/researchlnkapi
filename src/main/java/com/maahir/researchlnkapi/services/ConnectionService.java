@@ -1,31 +1,44 @@
 package com.maahir.researchlnkapi.services;
 
 
+import com.maahir.researchlnkapi.dtos.connections.ConnectionRequestDto;
 import com.maahir.researchlnkapi.dtos.connections.ConnectionStatusDto;
 import com.maahir.researchlnkapi.mappers.ConnectionMapper;
 import com.maahir.researchlnkapi.model.entities.Connection;
+import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.enums.ConnectionStatus;
 import com.maahir.researchlnkapi.model.keys.ConnectionId;
 import com.maahir.researchlnkapi.model.repositories.ConnectionRepository;
+import com.maahir.researchlnkapi.model.repositories.UserRepository;
+import com.maahir.researchlnkapi.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ConnectionService {
     private final ConnectionRepository connectionRepository;
     private final ConnectionMapper connectionMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ConnectionService(ConnectionRepository connectionRepository, ConnectionMapper connectionMapper){
+    public ConnectionService(ConnectionRepository connectionRepository, ConnectionMapper connectionMapper, UserRepository userRepository){
         this.connectionRepository = connectionRepository;
         this.connectionMapper = connectionMapper;
+        this.userRepository = userRepository;
     }
 
-    public ConnectionStatusDto request(Long actorProfileId, Long targetProfileId){
+    public ConnectionStatusDto request(Object principal, ConnectionRequestDto requestDto){
+        Long actorProfileId = extractProfileIdFromPrincipal(principal);
+        User targetUser = userRepository.findByEmail(requestDto.getTargetEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Target user not found by email"));
+        Long targetProfileId = targetUser.getProfile().getId();
+
         if (Objects.equals(actorProfileId, targetProfileId)){
             throw new IllegalArgumentException("Cannot connect to yourself");
         }
@@ -96,6 +109,7 @@ public class ConnectionService {
     }
 
     public List<Connection> listPending(Long profileId){
+
         return connectionRepository.findAllPendingFor(profileId);
     }
 
@@ -103,5 +117,29 @@ public class ConnectionService {
         long min = Math.min(a, b);
         long max = Math.max(a, b);
         return new ConnectionId(min, max);
+    }
+
+    private Long extractProfileIdFromPrincipal(Object principal){
+        Long userId;
+        if (principal instanceof OAuth2User oauthUser){
+            Object rawId = oauthUser.getAttribute("id");
+            if (rawId instanceof Number n) {
+                userId = n.longValue();
+            } else {
+                userId = Long.valueOf(rawId.toString());
+            }
+            User user = userRepository.findById(userId).
+                    orElseThrow(() -> new RuntimeException("User not found by Id"));
+            return user.getProfile().getId();
+
+        } else if (principal instanceof CustomUserDetails customUserDetails) {
+            userId = customUserDetails.getUserEntity().getId();
+            User user = userRepository.findById(userId).
+                    orElseThrow(() -> new RuntimeException("User not found by Id"));
+            return user.getProfile().getId();
+
+        } else {
+            throw new RuntimeException("Unsupported principal type: " + principal.getClass().getSimpleName());
+        }
     }
 }

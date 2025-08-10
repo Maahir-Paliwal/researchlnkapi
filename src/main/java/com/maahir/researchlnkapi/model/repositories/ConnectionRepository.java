@@ -25,6 +25,7 @@ public interface ConnectionRepository extends JpaRepository<Connection, Connecti
         SELECT c FROM Connection c
         WHERE (c.connectorId = :id OR c.connecteeId = :id)
             AND c.connectionStatus = com.maahir.researchlnkapi.model.enums.ConnectionStatus.PENDING
+            AND c.requesterId <> :id
         ORDER BY c.createdAt DESC
     """)
     List<Connection> findAllPendingFor(@Param("id") Long id);
