@@ -116,7 +116,7 @@ public class ConnectionService {
 
     public List<ConnectionListDto> listAccepted(Object principal){
         Long profileId = extractProfileIdFromPrincipal(principal);
-        List<Connection> rows = connectionRepository.findAllPendingFor(profileId);
+        List<Connection> rows = connectionRepository.findAllAcceptedFor(profileId);
 
         return rows.stream().map(connection -> {
             Long senderId = connection.getRequesterId();
