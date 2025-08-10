@@ -12,7 +12,6 @@ import com.maahir.researchlnkapi.model.repositories.ConnectionRepository;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.HikariCheckpointRestoreLifecycle;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
