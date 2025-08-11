@@ -1,4 +1,4 @@
-CREATE TABLE profileExperiences(
+CREATE TABLE profile_experiences(
     id          BIGINT AUTO_INCREMENT   NOT NULL,
     profile_id  BIGINT                  NOT NULL,
     title       VARCHAR(255)            NOT NULL,
@@ -13,4 +13,4 @@ CREATE TABLE profileExperiences(
 );
 
 #Indexing to query and show all the user's experiences on their table
-CREATE INDEX `idx_profileExperiences_profile_id` ON profileExperiences(profile_id)
+CREATE INDEX `idx_profileExperiences_profile_id` ON profile_experiences(profile_id)

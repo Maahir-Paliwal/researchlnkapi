@@ -38,29 +38,29 @@ CREATE TABLE posts (
         ON DELETE CASCADE
 );
 
-CREATE TABLE swipeCards (
+CREATE TABLE swipe_cards (
     id          BIGINT                  NOT NULL,
     name        VARCHAR(255)            NOT NULL,
     position    VARCHAR(255)            NOT NULL,
     description LONGTEXT                NOT NULL,
-    CONSTRAINT `pk_swipeCards` PRIMARY KEY (id),
+    CONSTRAINT `pk_swipe_cards` PRIMARY KEY (id),
 
-    CONSTRAINT `fk_swipeCards_profiles`                      #OnetoOne relationship between SwipeCard and Profile
+    CONSTRAINT `fk_swipe_cards_profiles`                      #OnetoOne relationship between SwipeCard and Profile
         FOREIGN KEY (id) REFERENCES profiles(id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE relevantExperiences (
+CREATE TABLE relevant_experiences (
     id              BIGINT AUTO_INCREMENT   NOT NULL,
     card_id         BIGINT                  NOT NULL,
     title           VARCHAR(255)            NOT NULL,
     date            VARCHAR(255)            NOT NULL,
     description     LONGTEXT                NOT NULL,
 
-    CONSTRAINT `pk_relevantExperiences` PRIMARY KEY (id),
+    CONSTRAINT `pk_relevant_experiences` PRIMARY KEY (id),
 
-    CONSTRAINT `fk_relevantExperiences_swipeCards`                          #OneToThree relationship
-        FOREIGN KEY (card_id) REFERENCES swipeCards(id)
+    CONSTRAINT `fk_relevant_experiences_swipe_cards`                          #OneToThree relationship
+        FOREIGN KEY (card_id) REFERENCES swipe_cards(id)
         ON DELETE CASCADE
 
 );
@@ -102,7 +102,7 @@ CREATE INDEX `idx_connections_connector_id` ON connections(connector_id);
 CREATE INDEX `idx_connections_connectee_id` ON connections(connectee_id);
 
 #Indexing here allows us to query for a swipecard's relevant experiences
-CREATE INDEX `idx_experiences_card_id` ON relevantExperiences(card_id);
+CREATE INDEX `idx_experiences_card_id` ON relevant_experiences(card_id);
 
 #Indexing here allows us to make sure each email and username is unique
 CREATE UNIQUE INDEX `idx_user_email` ON users(email);
