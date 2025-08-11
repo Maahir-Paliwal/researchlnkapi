@@ -9,6 +9,7 @@ import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.RelevantExperienceRepository;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
+import jakarta.transaction.Transactional;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -123,6 +124,7 @@ public class RelevantExperienceService {
     }
 
     //-------------- DELETE ---------------------------
+    @Transactional
     public void deleteMyRelevantExperience(Object principal, Long experienceId){
         Long myCardId = currentSwipeCardId(principal);
         int rows = relevantExperienceRepository.deleteByIdAndSwipeCard_Id(experienceId, myCardId);
