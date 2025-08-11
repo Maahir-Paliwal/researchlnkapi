@@ -34,4 +34,12 @@ public class Profile {
     @MapsId
     private User user;
 
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private SwipeCard swipeCard;
+
+    public void setSwipeCard(SwipeCard swipeCard) {
+        this.swipeCard = swipeCard;
+        swipeCard.setProfile(this);
+    }
+
 }

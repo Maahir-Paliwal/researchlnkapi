@@ -43,7 +43,6 @@ CREATE TABLE swipeCards (
     name        VARCHAR(255)            NOT NULL,
     position    VARCHAR(255)            NOT NULL,
     description LONGTEXT                NOT NULL,
-
     CONSTRAINT `pk_swipeCards` PRIMARY KEY (id),
 
     CONSTRAINT `fk_swipeCards_profiles`                      #OnetoOne relationship between SwipeCard and Profile
