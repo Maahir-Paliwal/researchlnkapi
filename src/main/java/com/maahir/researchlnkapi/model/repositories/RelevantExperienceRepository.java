@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface RelevantExperienceRepository extends JpaRepository<RelevantExperience, Long> {
 
     @Query("""
-        SELECT re FROM RelevantExperience re 
+        SELECT re FROM RelevantExperience re
         WHERE re.swipeCard.id = :cardId
         ORDER BY 
             CASE WHEN re.endAt is NULL THEN 1 ELSE 0 END DESC,
