@@ -33,13 +33,13 @@ public class ConnectionController {
         return ResponseEntity.ok(result);
     }
 
+    //reject can be used to reject a request or disconnect with someone
     @PostMapping("/reject")
     public ResponseEntity<Void> rejectRequest(@AuthenticationPrincipal Object principal,
                                               @RequestBody ConnectionAcceptDto request){
         connectionService.reject(principal, request);
         return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("/are-connected")
     public ResponseEntity<Boolean> areConnected(@AuthenticationPrincipal Object principal,
