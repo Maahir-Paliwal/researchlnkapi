@@ -41,7 +41,7 @@ public class RelevantExperienceService {
     //for display on your page
     public List<RelevantExperienceDto> listMyExperiences(Object principal){
         Long cardId = currentSwipeCardId(principal);
-        return relevantExperienceMapper.toDtoList(relevantExperienceRepository.findOrderedBySwipeCardId(cardId))
+        return relevantExperienceMapper.toDtoList(relevantExperienceRepository.findOrderedBySwipeCardId(cardId));
     }
 
 
@@ -98,7 +98,7 @@ public class RelevantExperienceService {
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Relevant Experience not found by Id: " + experienceId));
 
         if(!relevantExperience.getSwipeCard().getId().equals(myCardId)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You do not own this experience");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this experience");
         }
 
         if (isBlank(request.getTitle())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is required");
