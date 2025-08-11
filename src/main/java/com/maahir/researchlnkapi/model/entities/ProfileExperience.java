@@ -11,7 +11,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name ="profileExperiences")
+@Table(name ="profile_experiences")
 public class ProfileExperience {
 
     @Id

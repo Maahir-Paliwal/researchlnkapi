@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name ="swipeCards")
+@Table(name ="swipe_cards")
 public class SwipeCard {
     @Id
     @Column(name ="id")
