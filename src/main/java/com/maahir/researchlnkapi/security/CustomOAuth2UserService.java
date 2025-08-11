@@ -1,6 +1,7 @@
 package com.maahir.researchlnkapi.security;
 
 import com.maahir.researchlnkapi.model.entities.Profile;
+import com.maahir.researchlnkapi.model.entities.SwipeCard;
 import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,11 +53,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     return u;
                 })
                 .orElseGet(()-> {
-                    Profile profile = Profile.builder()
+                    Profile profile = Profile.builder()                             //create an empty profile
                             .name("")
                             .position("")
                             .description("")
                             .profilePicture("")
+                            .build();
+
+                    SwipeCard swipeCard = SwipeCard.builder()                       //create an empty swipeCard
+                            .name("")
+                            .position("")
+                            .description("")
                             .build();
 
                     User newUser = User.builder()
@@ -66,6 +73,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                             .updatedAt(LocalDateTime.now())
                             .build();
                     newUser.setProfile(profile);
+                    newUser.getProfile().setSwipeCard(swipeCard);
                     return userRepository.save(newUser);
                 });
 

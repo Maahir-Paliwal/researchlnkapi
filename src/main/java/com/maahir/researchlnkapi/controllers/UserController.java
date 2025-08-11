@@ -27,8 +27,6 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-
-
     @PutMapping("/me")
     public ResponseEntity<UserDto> updateUser(@AuthenticationPrincipal Object principal,
                                               @RequestBody UpdateUserRequest request) {

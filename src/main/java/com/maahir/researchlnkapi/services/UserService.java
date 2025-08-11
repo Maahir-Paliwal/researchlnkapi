@@ -6,6 +6,7 @@ import com.maahir.researchlnkapi.dtos.users.UpdateUserRequest;
 import com.maahir.researchlnkapi.dtos.users.UserDto;
 import com.maahir.researchlnkapi.mappers.UserMapper;
 import com.maahir.researchlnkapi.model.entities.Profile;
+import com.maahir.researchlnkapi.model.entities.SwipeCard;
 import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
@@ -48,8 +49,14 @@ public class UserService {
                 .profilePicture("")
                 .build();
 
-        user.setProfile(profile);                                   //handling bidirectionality
+        SwipeCard swipeCard = SwipeCard.builder()
+                .name("")
+                .position("")
+                .description("")
+                .build();
 
+        user.setProfile(profile);                                   //handling bidirectionality
+        user.getProfile().setSwipeCard(swipeCard);
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }
