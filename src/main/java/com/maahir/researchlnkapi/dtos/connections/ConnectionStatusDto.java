@@ -8,6 +8,5 @@ public class ConnectionStatusDto {
     private Long connectorId;
     private Long connecteeId;
     private Long requesterId;
-    private ConnectionStatus status;
-    private boolean meIsRequester;
+    private ConnectionStatus connectionStatus;
 }

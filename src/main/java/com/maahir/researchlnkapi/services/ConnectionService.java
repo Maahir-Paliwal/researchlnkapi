@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +51,8 @@ public class ConnectionService {
                     .connectorId(connectionId.getConnectorId())
                     .connecteeId(connectionId.getConnecteeId())
                     .requesterId(actorProfileId)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
                     .connectionStatus(ConnectionStatus.PENDING)
                     .build();
             connectionRepository.save(connection);
@@ -58,6 +61,7 @@ public class ConnectionService {
             if (connection.getConnectionStatus() == ConnectionStatus.PENDING
             && !Objects.equals(connection.getRequesterId(), actorProfileId)){
                 connection.setConnectionStatus(ConnectionStatus.ACCEPTED);
+                connection.setUpdatedAt(LocalDateTime.now());
                 connectionRepository.save(connection);
             }
         }
@@ -83,6 +87,7 @@ public class ConnectionService {
         }
 
         connection.setConnectionStatus(ConnectionStatus.ACCEPTED);
+        connection.setUpdatedAt(LocalDateTime.now());
         connectionRepository.save(connection);
 
         return connectionMapper.toDto(connection);
