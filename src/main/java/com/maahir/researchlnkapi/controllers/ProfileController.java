@@ -23,7 +23,7 @@ public class ProfileController {
     //Get the current authenticated user's profile
     @GetMapping("/me")
     public ResponseEntity<ProfileDto> getMyProfile(@AuthenticationPrincipal Object principal){
-        ProfileDto profile = profileService.getProfile(principal);
+        ProfileDto profile = profileService.getMyProfile(principal);
         return ResponseEntity.ok(profile);
     }
 

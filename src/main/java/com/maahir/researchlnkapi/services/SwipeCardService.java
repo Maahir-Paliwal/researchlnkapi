@@ -1,12 +1,11 @@
 package com.maahir.researchlnkapi.services;
 
-
-import com.maahir.researchlnkapi.dtos.profiles.ProfileDto;
-import com.maahir.researchlnkapi.dtos.profiles.UpdateProfileRequest;
-import com.maahir.researchlnkapi.mappers.ProfileMapper;
-import com.maahir.researchlnkapi.model.entities.Profile;
+import com.maahir.researchlnkapi.dtos.swipeCards.SwipeCardDto;
+import com.maahir.researchlnkapi.dtos.swipeCards.UpdateSwipeCardRequest;
+import com.maahir.researchlnkapi.mappers.SwipeCardMapper;
+import com.maahir.researchlnkapi.model.entities.SwipeCard;
 import com.maahir.researchlnkapi.model.entities.User;
-import com.maahir.researchlnkapi.model.repositories.ProfileRepository;
+import com.maahir.researchlnkapi.model.repositories.SwipeCardRepository;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +13,30 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProfileService {
+public class SwipeCardService {
+    private final SwipeCardRepository swipeCardRepository;
     private final UserRepository userRepository;
-    private final ProfileMapper profileMapper;
-    private final ProfileRepository profileRepository;
+    private final SwipeCardMapper swipeCardMapper;
 
     @Autowired
-    public ProfileService(UserRepository userRepository, ProfileMapper profileMapper, ProfileRepository profileRepository){
+    public SwipeCardService(SwipeCardRepository swipeCardRepository, UserRepository userRepository, SwipeCardMapper swipeCardMapper){
+        this.swipeCardRepository = swipeCardRepository;
         this.userRepository = userRepository;
-        this.profileMapper = profileMapper;
-        this.profileRepository = profileRepository;
+        this.swipeCardMapper = swipeCardMapper;
     }
 
-    public ProfileDto getMyProfile(Object principal) {
+    public SwipeCardDto getMySwipeCard(Object principal) {
         User user = extractUserFromPrincipal(principal);
-        Profile profile = user.getProfile();
-
-        return profileMapper.toDto(profile);
+        SwipeCard swipeCard = user.getProfile().getSwipeCard();
+        return swipeCardMapper.toDto(swipeCard);
     }
 
-    public ProfileDto updateProfile(Object principal, UpdateProfileRequest request){
+    public SwipeCardDto updateSwipeCard(Object principal, UpdateSwipeCardRequest request){
         User user = extractUserFromPrincipal(principal);
-        Profile profile = user.getProfile();
-        profileMapper.update(request, profile);
-        profile = profileRepository.save(profile);
-        return profileMapper.toDto(profile);
+        SwipeCard swipeCard = user.getProfile().getSwipeCard();
+        swipeCardMapper.update(request, swipeCard);
+        swipeCard = swipeCardRepository.save(swipeCard);
+        return swipeCardMapper.toDto(swipeCard);
     }
 
     private User extractUserFromPrincipal(Object principal){
