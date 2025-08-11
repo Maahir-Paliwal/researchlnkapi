@@ -54,12 +54,13 @@ CREATE TABLE relevant_experiences (
     id              BIGINT AUTO_INCREMENT   NOT NULL,
     card_id         BIGINT                  NOT NULL,
     title           VARCHAR(255)            NOT NULL,
-    date            VARCHAR(255)            NOT NULL,
+    start_at        TIMESTAMP               NOT NULL,
+    end_at          TIMESTAMP                   NULL,           #Null implies that the role is current
     description     LONGTEXT                NOT NULL,
 
     CONSTRAINT `pk_relevant_experiences` PRIMARY KEY (id),
 
-    CONSTRAINT `fk_relevant_experiences_swipe_cards`                          #OneToThree relationship
+    CONSTRAINT `fk_relevant_experiences_swipe_cards`                          #ZeroToThree relationship
         FOREIGN KEY (card_id) REFERENCES swipe_cards(id)
         ON DELETE CASCADE
 
@@ -101,8 +102,8 @@ CREATE INDEX `idx_posts_profile_id` ON posts(profile_id);
 CREATE INDEX `idx_connections_connector_id` ON connections(connector_id);
 CREATE INDEX `idx_connections_connectee_id` ON connections(connectee_id);
 
-#Indexing here allows us to query for a swipecard's relevant experiences
-CREATE INDEX `idx_experiences_card_id` ON relevant_experiences(card_id);
+#Indexing here allows us to query for a swipecard's relevant experiences to sort by time
+CREATE INDEX `idx_re_card_sort` ON relevant_experiences(card_id, start_at, end_at);
 
 #Indexing here allows us to make sure each email and username is unique
 CREATE UNIQUE INDEX `idx_user_email` ON users(email);
