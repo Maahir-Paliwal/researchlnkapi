@@ -9,4 +9,9 @@ public class ConnectionStatusDto {
     private Long connecteeId;
     private Long requesterId;
     private ConnectionStatus connectionStatus;
+
+    // Requester display fields from Profile
+    private String requesterName;
+    private String requesterPosition;
+    private String requesterProfilePicture;
 }
