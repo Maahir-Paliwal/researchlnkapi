@@ -37,4 +37,17 @@ public class ProfileExperience {
     @JoinColumn(name = "profile_id")
     @ToString.Exclude
     private Profile profile;
+
+    @PrePersist
+    @PreUpdate
+    private void normalize(){
+        //for month precision, we will force first of month, midnight
+        startAt = startAt.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        if (endAt != null) {
+            endAt = endAt.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            if (endAt.isBefore(startAt)) {
+                throw new IllegalArgumentException("End date cannot be before start date");
+            }
+        }
+    }
 }
