@@ -1,8 +1,13 @@
 package com.maahir.researchlnkapi.services;
 
+import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceCreateRequest;
+import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceDto;
 import com.maahir.researchlnkapi.mappers.ProfileExperienceMapper;
+import com.maahir.researchlnkapi.model.entities.Profile;
+import com.maahir.researchlnkapi.model.entities.ProfileExperience;
 import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.repositories.ProfileExperienceRepository;
+import com.maahir.researchlnkapi.model.repositories.ProfileRepository;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,29 +16,73 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.print.attribute.standard.JobKOctets;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.List;
 
 @Service
 public class ProfileExperienceService {
     private final ProfileExperienceRepository profileExperienceRepository;
     private final ProfileExperienceMapper profileExperienceMapper;
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     @Autowired
     public ProfileExperienceService(ProfileExperienceRepository profileExperienceRepository,
                                     ProfileExperienceMapper profileExperienceMapper,
-                                    UserRepository userRepository){
+                                    UserRepository userRepository, ProfileRepository profileRepository){
         this.profileExperienceRepository = profileExperienceRepository;
         this.profileExperienceMapper = profileExperienceMapper;
         this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
     }
 
+    // ------------------- READ ONLY METHODS ------------------
+    public List<ProfileExperienceDto> listMyProfileExperiences(Object principal){
+        Long profileId = currentProfileId(principal);
+        return profileExperienceMapper.toDtoList(profileExperienceRepository.findOrderedByProfileId(profileId));
+    }
 
+    public List<ProfileExperienceDto> listProfileExperiencesByProfileId(Long profileId){
+        return profileExperienceMapper.toDtoList(profileExperienceRepository.findOrderedByProfileId(profileId));
+    }
 
+    // ----------------- CREATE METHODS ------------------
+    public ProfileExperienceDto createNewProfileExperience(Object principal, ProfileExperienceCreateRequest request){
+        Long profileId = currentProfileId(principal);
 
-    // ------------------ HELPER METHODS ------------------
+        // Basic required fields check
+        if (isBlank(request.getTitle())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is required");
+        if (isBlank(request.getStartAt())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date (yyyy-MM) is required");
+        if (isBlank(request.getDescription())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description is required");
+
+        LocalDateTime startAt = toStartOfMonth(request.getStartAt());
+        LocalDateTime endAt = toNullableStartOfMonth(request.getEndAt());
+
+        if (endAt != null && endAt.isBefore(startAt)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date cannot be before start date");
+        }
+
+        User user = extractUserFromPrincipal(principal);
+        Profile profile = user.getProfile();
+        if (profile == null || !profile.getId().equals(profileId)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profile not initialized");
+        }
+
+        ProfileExperience profileExperience = ProfileExperience.builder()
+                .profile(profile)
+                .title(request.getTitle().trim())
+                .description(request.getDescription().trim())
+                .startAt(startAt)
+                .endAt(endAt)
+                .build();
+
+        profileExperience = profileExperienceRepository.save(profileExperience);
+        return profileExperienceMapper.toDto(profileExperience);
+
+    }
+
+    // ----------------- HELPER METHODS ------------------
     private boolean isBlank(String str){
         return str == null || str.trim().isEmpty();
     }
