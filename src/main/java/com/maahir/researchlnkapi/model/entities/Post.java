@@ -21,7 +21,7 @@ public class Post {
     private Long id;
 
     @Column(name ="post_type", nullable = false)
-    private String postType;
+    private ViewType viewType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "view", nullable = false)
