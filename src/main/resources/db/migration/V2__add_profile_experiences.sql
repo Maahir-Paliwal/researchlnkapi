@@ -2,7 +2,8 @@ CREATE TABLE profile_experiences(
     id          BIGINT AUTO_INCREMENT   NOT NULL,
     profile_id  BIGINT                  NOT NULL,
     title       VARCHAR(255)            NOT NULL,
-    date        VARCHAR(255)            NOT NULL,
+    start_at    TIMESTAMP               NOT NULL,
+    end_at      TIMESTAMP                   NULL,
     description LONGTEXT                NOT NULL,
 
     CONSTRAINT `pk_profileExperiences` PRIMARY KEY (id),
