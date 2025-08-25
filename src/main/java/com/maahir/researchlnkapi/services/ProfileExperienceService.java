@@ -2,6 +2,7 @@ package com.maahir.researchlnkapi.services;
 
 import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceCreateRequest;
 import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceDto;
+import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceUpdateRequest;
 import com.maahir.researchlnkapi.mappers.ProfileExperienceMapper;
 import com.maahir.researchlnkapi.model.entities.Profile;
 import com.maahir.researchlnkapi.model.entities.ProfileExperience;
@@ -37,6 +38,8 @@ public class ProfileExperienceService {
         this.profileRepository = profileRepository;
     }
 
+
+
     // ------------------- READ ONLY METHODS ------------------
     public List<ProfileExperienceDto> listMyProfileExperiences(Object principal){
         Long profileId = currentProfileId(principal);
@@ -46,6 +49,8 @@ public class ProfileExperienceService {
     public List<ProfileExperienceDto> listProfileExperiencesByProfileId(Long profileId){
         return profileExperienceMapper.toDtoList(profileExperienceRepository.findOrderedByProfileId(profileId));
     }
+
+
 
     // ----------------- CREATE METHODS ------------------
     public ProfileExperienceDto createNewProfileExperience(Object principal, ProfileExperienceCreateRequest request){
@@ -79,6 +84,19 @@ public class ProfileExperienceService {
 
         profileExperience = profileExperienceRepository.save(profileExperience);
         return profileExperienceMapper.toDto(profileExperience);
+    }
+
+
+
+    // ----------------- UPDATE METHODS ------------------
+    public ProfileExperienceDto updateProfileExperience(Object principal,
+                                                        Long profileExperienceId,
+                                                        ProfileExperienceUpdateRequest request){
+        Long myProfileId = currentProfileId(principal);
+
+        ProfileExperience profileExperience = profileExperienceRepository.findById(profileExperienceId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile Experience not found by Id: " + profileExperienceId));
+
 
     }
 

@@ -1,6 +1,7 @@
 package com.maahir.researchlnkapi.model.repositories;
 
 import com.maahir.researchlnkapi.model.entities.ProfileExperience;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +22,13 @@ public interface ProfileExperienceRepository extends JpaRepository<ProfileExperi
     List<ProfileExperience> findOrderedByProfileId(@Param("profileId") Long profileId);
 
     long countByProfile_Id(Long profileId);
+
+    @EntityGraph(attributePaths = "profile")
+    @Query("""
+    SELECT pe from ProfileExperience pe
+    WHERE pe.id = :id
+    """)
+    Optional<ProfileExperience> findWithProfileById(@Param("id") Long id);
 
     Optional<ProfileExperience> findByIdAndProfile_Id(Long id, Long profileId);
 
