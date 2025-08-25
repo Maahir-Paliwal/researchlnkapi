@@ -13,7 +13,7 @@ public interface ProfileExperienceRepository extends JpaRepository<ProfileExperi
 
     @Query("""
         select pe from ProfileExperience pe
-        WHERE pe.profile.id =: profileId
+        WHERE pe.profile.id = :profileId
         ORDER BY
                 CASE WHEN pe.endAt IS NULL THEN 1 ELSE 0 END DESC,
                 COALESCE(pe.endAt, pe.startAt) DESC, 

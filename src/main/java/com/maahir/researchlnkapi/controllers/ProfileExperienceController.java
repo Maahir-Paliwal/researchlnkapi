@@ -32,9 +32,9 @@ public class ProfileExperienceController {
 
 
     // --------------------- CREATE ------------------------
-    @GetMapping("/me")
+    @PostMapping("/me")
     public ResponseEntity<ProfileExperienceDto> createProfileExperience(@AuthenticationPrincipal Object principal,
-                                                                        ProfileExperienceCreateRequest request){
+                                                                        @RequestBody ProfileExperienceCreateRequest request){
         ProfileExperienceDto createdExperience = profileExperienceService.createNewProfileExperience(principal, request);
         return ResponseEntity.ok(createdExperience);
     }
@@ -43,7 +43,7 @@ public class ProfileExperienceController {
     @PutMapping("/{id}")
     public ResponseEntity<ProfileExperienceDto> updateProfileExperience(@AuthenticationPrincipal Object principal,
                                                                         @PathVariable("id") Long profileExperienceId,
-                                                                        ProfileExperienceUpdateRequest request){
+                                                                        @RequestBody ProfileExperienceUpdateRequest request){
         ProfileExperienceDto updatedExperience = profileExperienceService.updateProfileExperience(principal, profileExperienceId, request);
         return ResponseEntity.ok(updatedExperience);
     }
