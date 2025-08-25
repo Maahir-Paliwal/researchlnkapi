@@ -11,6 +11,7 @@ import com.maahir.researchlnkapi.model.repositories.ProfileExperienceRepository;
 import com.maahir.researchlnkapi.model.repositories.ProfileRepository;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -94,10 +95,41 @@ public class ProfileExperienceService {
                                                         ProfileExperienceUpdateRequest request){
         Long myProfileId = currentProfileId(principal);
 
-        ProfileExperience profileExperience = profileExperienceRepository.findById(profileExperienceId).
+        ProfileExperience profileExperience = profileExperienceRepository.findWithProfileById(profileExperienceId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile Experience not found by Id: " + profileExperienceId));
 
+        if (!profileExperience.getProfile().getId().equals(myProfileId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this experience");
+        }
 
+        if (isBlank(request.getTitle())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is required");
+        if (isBlank(request.getStartAt())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date (yyyy-MM) is required");
+        if (isBlank(request.getDescription())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description is required");
+
+        LocalDateTime startAt = toStartOfMonth(request.getStartAt());
+        LocalDateTime endAt = toNullableStartOfMonth(request.getEndAt());
+
+        if (endAt != null && endAt.isBefore(startAt)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date cannot be before start date");
+        }
+
+        profileExperience.setTitle(request.getTitle().trim());
+        profileExperience.setDescription(request.getDescription().trim());
+        profileExperience.setStartAt(startAt);
+        profileExperience.setEndAt(endAt);
+
+        profileExperience = profileExperienceRepository.save(profileExperience);
+        return profileExperienceMapper.toDto(profileExperience);
+    }
+
+
+
+    //------------------ DELETE METHOD -------------------
+    @Transactional
+    public void deleteMyProfileExperience(Object principal, Long profileExperienceId){
+        long myProfileId = currentProfileId(principal);
+        int rows = profileExperienceRepository.deleteByIdAndProfile_Id(profileExperienceId, myProfileId);
+        if (rows == 0) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile Experience not found by Id: " + profileExperienceId);
     }
 
     // ----------------- HELPER METHODS ------------------

@@ -32,7 +32,7 @@ public interface ProfileExperienceRepository extends JpaRepository<ProfileExperi
 
     Optional<ProfileExperience> findByIdAndProfile_Id(Long id, Long profileId);
 
-    long deleteByIdAndProfile_Id(Long id, Long profileId);
+    int deleteByIdAndProfile_Id(Long id, Long profileId);
 
     boolean existsByIdAndProfile_Id(Long id, Long profileId);
 }
