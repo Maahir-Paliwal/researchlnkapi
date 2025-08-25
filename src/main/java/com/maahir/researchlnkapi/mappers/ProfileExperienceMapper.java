@@ -12,8 +12,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProfileExperienceMapper {
 
-    @Mapping(target ="startAt", expression = "java(formatYearMonth(relevantExperience.getStartAt()))")
-    @Mapping(target ="endAt", expression = "java(formatYearMonth(relevantExperience.getEndAt()))")
+    @Mapping(target ="startAt", expression = "java(formatYearMonth(profileExperience.getStartAt()))")
+    @Mapping(target ="endAt", expression = "java(formatYearMonth(profileExperience.getEndAt()))")
     ProfileExperienceDto toDto(ProfileExperience profileExperience);
 
     List<ProfileExperienceDto> toDtoList(List<ProfileExperience> profileExperiences);
