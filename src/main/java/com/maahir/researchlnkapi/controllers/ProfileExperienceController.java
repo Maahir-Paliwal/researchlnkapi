@@ -31,7 +31,13 @@ public class ProfileExperienceController {
         return ResponseEntity.ok(myProfileExperiences);
     }
 
-    //Another method for viewing other people's profile experiences should go here
+    //To be shown on the frontend at ResearchLNK/profile/[publicId]
+    //Paired with the getPublicProfile() controller in the ProfileController
+    @GetMapping("/{publicId}")
+    public ResponseEntity<List<ProfileExperienceDto>> listPublicProfileExperiences(@PathVariable String publicId){
+        List<ProfileExperienceDto> publicProfileExperiences = profileExperienceService.listProfileExperiencesByPublicId(publicId);
+        return ResponseEntity.ok(publicProfileExperiences);
+    }
 
 
     // --------------------- CREATE ------------------------

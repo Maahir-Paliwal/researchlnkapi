@@ -21,6 +21,16 @@ public interface ProfileExperienceRepository extends JpaRepository<ProfileExperi
     """)
     List<ProfileExperience> findOrderedByProfileId(@Param("profileId") Long profileId);
 
+    @Query("""
+        select pe from ProfileExperience pe
+        WHERE pe.profile.publicId = :publicId
+        ORDER BY
+                CASE WHEN pe.endAt IS NULL THEN 1 ELSE 0 END DESC,
+                COALESCE(pe.endAt, pe.startAt) DESC, 
+                pe.startAt DESC
+    """)
+    List<ProfileExperience> findOrderedByPublicId(@Param("publicId") String publicId);
+
     long countByProfile_Id(Long profileId);
 
     @EntityGraph(attributePaths = "profile")

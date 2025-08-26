@@ -47,8 +47,8 @@ public class ProfileExperienceService {
         return profileExperienceMapper.toDtoList(profileExperienceRepository.findOrderedByProfileId(profileId));
     }
 
-    public List<ProfileExperienceDto> listProfileExperiencesByProfileId(Long profileId){
-        return profileExperienceMapper.toDtoList(profileExperienceRepository.findOrderedByProfileId(profileId));
+    public List<ProfileExperienceDto> listProfileExperiencesByPublicId(String publicId){
+        return profileExperienceMapper.toDtoList(profileExperienceRepository.findOrderedByPublicId(publicId));
     }
 
 
