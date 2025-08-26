@@ -21,17 +21,14 @@ public class Post {
     private Long id;
 
     @Column(name ="post_type", nullable = false)
-    private ViewType viewType;
+    private String postType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "view", nullable = false)
-    private ViewType view;
+    private ViewType viewType;
 
     @Column(name = "description", nullable = false)
     private String description;
-
-    @Column(name = "date", nullable = false)
-    private String date;
 
     @Column(name ="created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -40,5 +37,10 @@ public class Post {
     @JoinColumn(name = "profile_id")
     @ToString.Exclude
     private Profile profile;
+
+    @PrePersist
+    public void prePersist(){
+        if (createdAt == null) createdAt = LocalDateTime.now();
+    }
 
 }
