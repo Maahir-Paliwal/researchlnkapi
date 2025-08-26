@@ -13,5 +13,5 @@ public class PublicProfileDto {
     private String description;
     private String profilePicture;
 
-    private boolean isOwner;
+    private boolean owner;
 }
