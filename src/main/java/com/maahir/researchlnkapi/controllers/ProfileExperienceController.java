@@ -22,6 +22,9 @@ public class ProfileExperienceController {
     }
 
     // -------------------- READ ONLY ---------------------
+
+    //To be shown on the frontend at ResearchLNK/profile/me
+    //Paired with the getMyProfile() Controller in the ProfileController
     @GetMapping("/me")
     public ResponseEntity<List<ProfileExperienceDto>> getMyProfileExperiences(@AuthenticationPrincipal Object principal){
         List<ProfileExperienceDto> myProfileExperiences = profileExperienceService.listMyProfileExperiences(principal);
