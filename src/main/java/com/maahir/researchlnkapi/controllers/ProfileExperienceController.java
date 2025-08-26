@@ -1,8 +1,8 @@
 package com.maahir.researchlnkapi.controllers;
 
-import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceCreateRequest;
-import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceDto;
-import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceUpdateRequest;
+import com.maahir.researchlnkapi.dtos.profileExperience.ProfileExperienceCreateRequest;
+import com.maahir.researchlnkapi.dtos.profileExperience.ProfileExperienceDto;
+import com.maahir.researchlnkapi.dtos.profileExperience.ProfileExperienceUpdateRequest;
 import com.maahir.researchlnkapi.services.ProfileExperienceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

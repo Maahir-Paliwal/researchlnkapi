@@ -1,6 +1,6 @@
 package com.maahir.researchlnkapi.mappers;
 
-import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceDto;
+import com.maahir.researchlnkapi.dtos.profileExperience.ProfileExperienceDto;
 import com.maahir.researchlnkapi.model.entities.ProfileExperience;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

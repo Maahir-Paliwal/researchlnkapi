@@ -1,8 +1,8 @@
 package com.maahir.researchlnkapi.services;
 
-import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceCreateRequest;
-import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceDto;
-import com.maahir.researchlnkapi.dtos.ProfileExperience.ProfileExperienceUpdateRequest;
+import com.maahir.researchlnkapi.dtos.profileExperience.ProfileExperienceCreateRequest;
+import com.maahir.researchlnkapi.dtos.profileExperience.ProfileExperienceDto;
+import com.maahir.researchlnkapi.dtos.profileExperience.ProfileExperienceUpdateRequest;
 import com.maahir.researchlnkapi.mappers.ProfileExperienceMapper;
 import com.maahir.researchlnkapi.model.entities.Profile;
 import com.maahir.researchlnkapi.model.entities.ProfileExperience;

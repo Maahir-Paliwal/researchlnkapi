@@ -1,4 +1,4 @@
-package com.maahir.researchlnkapi.dtos.ProfileExperience;
+package com.maahir.researchlnkapi.dtos.profileExperience;
 
 import lombok.Data;
 

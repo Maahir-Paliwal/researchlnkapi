@@ -1,9 +1,9 @@
-package com.maahir.researchlnkapi.dtos.ProfileExperience;
+package com.maahir.researchlnkapi.dtos.profileExperience;
 
 import lombok.Data;
 
 @Data
-public class ProfileExperienceUpdateRequest {
+public class ProfileExperienceCreateRequest {
     private String title;
     private String startAt;
     private String endAt;
