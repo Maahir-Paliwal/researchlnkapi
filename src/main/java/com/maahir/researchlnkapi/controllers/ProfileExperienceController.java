@@ -39,7 +39,6 @@ public class ProfileExperienceController {
         return ResponseEntity.ok(publicProfileExperiences);
     }
 
-
     // --------------------- CREATE ------------------------
     @PostMapping("/me")
     public ResponseEntity<ProfileExperienceDto> createProfileExperience(@AuthenticationPrincipal Object principal,
