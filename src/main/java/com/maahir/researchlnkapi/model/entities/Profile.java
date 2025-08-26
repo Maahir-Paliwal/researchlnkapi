@@ -3,6 +3,8 @@ package com.maahir.researchlnkapi.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,9 @@ public class Profile {
     @Id
     @Column(name ="id")
     private Long id;
+
+    @Column(name = "public_id", length =36, nullable = false, unique = true, updatable = false)
+    private String publicId;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -40,6 +45,11 @@ public class Profile {
     public void setSwipeCard(SwipeCard swipeCard) {
         this.swipeCard = swipeCard;
         swipeCard.setProfile(this);
+    }
+
+    @PrePersist
+    public void ensurePublicId(){
+        if ((publicId == null) || (publicId.isBlank())) publicId = UUID.randomUUID().toString();
     }
 
 }
