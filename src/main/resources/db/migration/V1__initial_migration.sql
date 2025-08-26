@@ -10,12 +10,14 @@ CREATE TABLE users (
 
 CREATE TABLE profiles (
     id              BIGINT                  NOT NULL,
+    public_id       CHAR(36)                NOT NULL DEFAULT (uuid()),
     name            VARCHAR(255)            NOT NULL,
     position        VARCHAR(255)            NOT NULL,
     description     LONGTEXT                NOT NULL,
     profile_picture VARCHAR(512)            NOT NULL,              #profile picture functionality
 
     CONSTRAINT `pk_profiles` PRIMARY KEY (id),
+    CONSTRAINT `uq_profiles_public_id` UNIQUE (public_id),
 
     CONSTRAINT `fk_profiles_user`                                  #OnetoOne relationship with user
         FOREIGN KEY (id) REFERENCES users(id)
