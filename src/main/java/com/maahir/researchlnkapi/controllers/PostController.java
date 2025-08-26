@@ -3,7 +3,6 @@ package com.maahir.researchlnkapi.controllers;
 import com.maahir.researchlnkapi.dtos.posts.PostCreateRequest;
 import com.maahir.researchlnkapi.dtos.posts.PostDto;
 import com.maahir.researchlnkapi.dtos.posts.PostUpdateRequest;
-import com.maahir.researchlnkapi.model.entities.Post;
 import com.maahir.researchlnkapi.services.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
