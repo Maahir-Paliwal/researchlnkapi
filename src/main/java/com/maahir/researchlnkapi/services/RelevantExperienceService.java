@@ -38,12 +38,16 @@ public class RelevantExperienceService {
 
 
     //--------------------- READ ONLY METHODS --------------------
-    //for display on your page
-    public List<RelevantExperienceDto> listMyExperiences(Object principal){
+    //for display on your swipeCard
+    public List<RelevantExperienceDto> listMyRelevantExperiences(Object principal){
         Long cardId = currentSwipeCardId(principal);
         return relevantExperienceMapper.toDtoList(relevantExperienceRepository.findOrderedBySwipeCardId(cardId));
     }
 
+    //for display on anyone's swipeCard
+    public List<RelevantExperienceDto> listRelevantExperiencesByPublicId(String publicId){
+        return relevantExperienceMapper.toDtoList(relevantExperienceRepository.findOrderedByPublicId(publicId));
+    }
 
 
     //--------------------- CREATE --------------------------------

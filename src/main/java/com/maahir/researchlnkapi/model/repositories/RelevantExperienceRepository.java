@@ -21,6 +21,16 @@ public interface RelevantExperienceRepository extends JpaRepository<RelevantExpe
     """)
     List<RelevantExperience> findOrderedBySwipeCardId(@Param("cardId") Long cardId);
 
+    @Query("""
+        SELECT re FROM RelevantExperience re
+        WHERE re.swipeCard.profile.publicId = :publicId
+        ORDER BY 
+            CASE WHEN re.endAt is NULL THEN 1 ELSE 0 END DESC,
+            COALESCE(re.endAt, re.startAt) DESC,
+            re.startAt DESC
+    """)
+    List<RelevantExperience> findOrderedByPublicId(@Param("publicId") String publicId);
+
     long countBySwipeCard_Id(Long swipeCardId);
 
     @EntityGraph(attributePaths = "swipeCard")

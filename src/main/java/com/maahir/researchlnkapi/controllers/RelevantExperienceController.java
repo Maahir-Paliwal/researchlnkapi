@@ -21,14 +21,19 @@ public class RelevantExperienceController {
     }
 
     //------------------ READ ONLY -----------------------
+    //To be paired with getMySwipeCard in SwipeCardController
     @GetMapping("/me")
     public ResponseEntity<List<RelevantExperienceDto>> getMyRelevantExperiences(@AuthenticationPrincipal Object principal){
-        List<RelevantExperienceDto> dtoList = relevantExperienceService.listMyExperiences(principal);
+        List<RelevantExperienceDto> dtoList = relevantExperienceService.listMyRelevantExperiences(principal);
         return ResponseEntity.ok(dtoList);
     }
 
-    //---------- ANOTHER METHOD FOR VIEWING ANOTHER PROFILE'S EXPERIENCES SHOULD GO HERE --------------
-
+    //To be paired with getPublicSwipeCard in SwipeCardController
+    @GetMapping("/{publicId}")
+    public ResponseEntity<List<RelevantExperienceDto>> listPublicRelevantExperiences(@PathVariable String publicId){
+        List<RelevantExperienceDto> dtoList = relevantExperienceService.listRelevantExperiencesByPublicId(publicId);
+        return ResponseEntity.ok(dtoList);
+    }
 
     //------------------- CREATE --------------------------
     @PostMapping("/me")
@@ -37,7 +42,6 @@ public class RelevantExperienceController {
         RelevantExperienceDto createdExperience = relevantExperienceService.createNewRelevantExperience(principal, relevantExperiencerequest);
         return ResponseEntity.ok(createdExperience);
     }
-
 
     //------------------- UPDATE ---------------------------
     @PutMapping("/{id}")
