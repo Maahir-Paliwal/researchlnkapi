@@ -19,25 +19,25 @@ public class ConnectionController {
         this.connectionService = connectionService;
     }
 
-    @PostMapping("/request")
+    @PostMapping("/request/{publicId}")
     public ResponseEntity<ConnectionStatusDto> requestConnection(@AuthenticationPrincipal Object principal,
-                                                                 @RequestBody ConnectionRequestDto request){
-        ConnectionStatusDto result = connectionService.request(principal, request);
+                                                                 @PathVariable String publicId){
+        ConnectionStatusDto result = connectionService.request(principal, publicId);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/accept")
+    @PostMapping("/accept/{publicId}")
     public ResponseEntity<ConnectionStatusDto> acceptRequest(@AuthenticationPrincipal Object principal,
-                                                             @RequestBody ConnectionAcceptDto request){
-        ConnectionStatusDto result = connectionService.accept(principal, request);
+                                                             @PathVariable String publicId){
+        ConnectionStatusDto result = connectionService.accept(principal, publicId);
         return ResponseEntity.ok(result);
     }
 
     //reject can be used to reject a request or disconnect with someone
-    @PostMapping("/reject")
+    @PostMapping("/reject/{publicId}")
     public ResponseEntity<Void> rejectRequest(@AuthenticationPrincipal Object principal,
-                                              @RequestBody ConnectionAcceptDto request){
-        connectionService.reject(principal, request);
+                                              @PathVariable String publicId){
+        connectionService.reject(principal, publicId);
         return ResponseEntity.noContent().build();
     }
 

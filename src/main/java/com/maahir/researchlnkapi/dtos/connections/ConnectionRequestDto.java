@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ConnectionRequestDto {
-    private String targetEmail;
+    private String publicId;
 }

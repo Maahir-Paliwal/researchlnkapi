@@ -9,6 +9,7 @@ import com.maahir.researchlnkapi.model.entities.User;
 import com.maahir.researchlnkapi.model.enums.ConnectionStatus;
 import com.maahir.researchlnkapi.model.keys.ConnectionId;
 import com.maahir.researchlnkapi.model.repositories.ConnectionRepository;
+import com.maahir.researchlnkapi.model.repositories.ProfileRepository;
 import com.maahir.researchlnkapi.model.repositories.UserRepository;
 import com.maahir.researchlnkapi.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +25,24 @@ public class ConnectionService {
     private final ConnectionRepository connectionRepository;
     private final ConnectionMapper connectionMapper;
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     @Autowired
-    public ConnectionService(ConnectionRepository connectionRepository, ConnectionMapper connectionMapper, UserRepository userRepository){
+    public ConnectionService(ConnectionRepository connectionRepository,
+                             ConnectionMapper connectionMapper,
+                             UserRepository userRepository,
+                             ProfileRepository profileRepository){
         this.connectionRepository = connectionRepository;
         this.connectionMapper = connectionMapper;
         this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
     }
 
-    public ConnectionStatusDto request(Object principal, ConnectionRequestDto requestDto){
+    public ConnectionStatusDto request(Object principal, String publicId){
         Long actorProfileId = extractProfileIdFromPrincipal(principal);
-        User targetUser = userRepository.findByEmail(requestDto.getTargetEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Target user not found by email"));
-        Long targetProfileId = targetUser.getProfile().getId();
+        Profile profile = profileRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new RuntimeException("User now found by publicId: " + publicId));
+        Long targetProfileId = profile.getId();
 
         if (Objects.equals(actorProfileId, targetProfileId)){
             throw new IllegalArgumentException("Cannot connect to yourself");
@@ -65,14 +71,24 @@ public class ConnectionService {
                 connectionRepository.save(connection);
             }
         }
+        ConnectionStatusDto dto = connectionMapper.toDto(connection);
 
-        return connectionMapper.toDto(connection);
+        Profile requester = profileRepository.findById(actorProfileId)
+                .orElseThrow(() -> new IllegalStateException("Requester profile missing"));
+
+        dto.setRequesterPublicId(requester.getPublicId());
+        dto.setRequesterName(requester.getName());
+        dto.setRequesterPosition(requester.getPosition());
+        dto.setRequesterProfilePicture(requester.getProfilePicture());
+        return dto;
     }
 
 
-    public ConnectionStatusDto accept(Object principal, ConnectionAcceptDto acceptDto){
+    public ConnectionStatusDto accept(Object principal, String publicId){
         Long actorProfileId = extractProfileIdFromPrincipal(principal);
-        Long targetProfileId = acceptDto.getSenderId();
+        Profile profile = profileRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new RuntimeException("User now found by publicId: " + publicId));
+        Long targetProfileId = profile.getId();
 
         ConnectionId connectionId = orderConnectionPair(actorProfileId, targetProfileId);
         Connection connection = connectionRepository.findById(connectionId)
@@ -90,12 +106,23 @@ public class ConnectionService {
         connection.setUpdatedAt(LocalDateTime.now());
         connectionRepository.save(connection);
 
-        return connectionMapper.toDto(connection);
+        ConnectionStatusDto dto = connectionMapper.toDto(connection);
+
+        Profile requester = profileRepository.findById(actorProfileId)
+                .orElseThrow(() -> new IllegalStateException("Requester profile missing"));
+
+        dto.setRequesterPublicId(requester.getPublicId());
+        dto.setRequesterName(requester.getName());
+        dto.setRequesterPosition(requester.getPosition());
+        dto.setRequesterProfilePicture(requester.getProfilePicture());
+        return dto;
     }
 
-    public void reject(Object principal, ConnectionAcceptDto acceptDto){
+    public void reject(Object principal, String publicId){
         Long actorProfileId = extractProfileIdFromPrincipal(principal);
-        Long targetProfileId = acceptDto.getSenderId();
+        Profile profile = profileRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new RuntimeException("User now found by publicId: " + publicId));
+        Long targetProfileId = profile.getId();
         ConnectionId connectionId = orderConnectionPair(actorProfileId, targetProfileId);
         Connection connection = connectionRepository.findById(connectionId)
                 .orElseThrow(() -> new IllegalArgumentException("No request exists"));
@@ -105,9 +132,9 @@ public class ConnectionService {
 
     public boolean isConnected(Object principal, ConnectionCheckDto checkDto){
         Long actorProfileId = extractProfileIdFromPrincipal(principal);
-        User user = userRepository.findByEmail(checkDto.getTargetEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Target user not found by email"));
-        Long targetProfileId = user.getProfile().getId();
+        Profile profile = profileRepository.findByPublicId(checkDto.getPublicId())
+                .orElseThrow(() -> new RuntimeException("Profile not found by Id: " + checkDto.getPublicId()));
+        Long targetProfileId = profile.getId();
 
         if (Objects.equals(actorProfileId, targetProfileId)){
             throw new IllegalArgumentException("Cannot check connection to yourself");
@@ -132,6 +159,7 @@ public class ConnectionService {
             connectionListDto.setSenderName(senderProfile.getName());
             connectionListDto.setSenderEmail(senderProfile.getUser().getEmail());
             connectionListDto.setSenderProfilePic(senderProfile.getProfilePicture());
+            connectionListDto.setPublicId(senderProfile.getPublicId());
             return connectionListDto;
         }).toList();
     }
@@ -150,6 +178,7 @@ public class ConnectionService {
             connectionPendingDto.setSenderName(senderProfile.getName());
             connectionPendingDto.setSenderEmail(senderProfile.getUser().getEmail());
             connectionPendingDto.setSenderProfilePic(senderProfile.getProfilePicture());
+            connectionPendingDto.setPublicId(senderProfile.getPublicId());
             return connectionPendingDto;
                 }).toList();
     }

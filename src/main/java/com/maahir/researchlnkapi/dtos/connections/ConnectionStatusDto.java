@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class ConnectionStatusDto {
+    private String requesterPublicId;
     private Long connectorId;
     private Long connecteeId;
     private Long requesterId;

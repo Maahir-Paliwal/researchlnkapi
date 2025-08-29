@@ -13,7 +13,8 @@ public interface ConnectionMapper {
             @Mapping(target = "connectionStatus", source = "connectionStatus"),
             @Mapping(target = "requesterName", source = "requester.name"),
             @Mapping(target = "requesterPosition", source = "requester.position"),
-            @Mapping(target = "requesterProfilePicture", source = "requester.profilePicture")
+            @Mapping(target = "requesterProfilePicture", source = "requester.profilePicture"),
+            @Mapping(target = "requesterPublicId", source = "requester.publicId")
     })
     ConnectionStatusDto toDto(Connection connection);
 
